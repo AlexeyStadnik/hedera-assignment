@@ -15,13 +15,19 @@ buildscript {
 plugins {
     id 'java'
     id "se.thinkcode.cucumber-runner" version "0.0.8"
+    id 'checkstyle'
 }
 
 group 'org.example'
-version '1.0-SNAPSHOT'
+version '1.0'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+}
+
+checkstyle {
+    toolVersion = '10.12.0'
 }
 
 

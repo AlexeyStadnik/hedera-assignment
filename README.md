@@ -16,7 +16,7 @@ PRIVATE_KEY=
 To run the tests
 
 ```bash
-./gradlew clean test
+./gradlew cucumber
 ```
 
 ## Useful links

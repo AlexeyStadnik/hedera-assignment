@@ -1,7 +1,6 @@
 package org.example;
 
 import com.hedera.hashgraph.sdk.AccountBalance;
-import com.hedera.hashgraph.sdk.PrecheckStatusException;
 import com.hedera.hashgraph.sdk.ReceiptStatusException;
 import com.hedera.hashgraph.sdk.TokenId;
 import com.hedera.hashgraph.sdk.TokenSupplyType;
@@ -15,10 +14,10 @@ import io.cucumber.java.en.When;
 import lombok.SneakyThrows;
 import org.example.hedera.model.CreateTokenModel;
 import org.example.hedera.model.HederaAccount;
+import org.example.utils.TestDataUtils;
 import org.junit.Assert;
 
 import java.math.BigDecimal;
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -80,7 +79,8 @@ public class TokensStepDefinitions extends AbstractBaseStepDefinitions {
     @When("I create a token named {string} \\({string})")
     @SneakyThrows
     public void iCreateATokenNamedTestTokenHTT(final String name, final String symbol) {
-        final TokenId tokenId = tokenClient.createToken(accounts.get("first"), createTokenModel(name, symbol));
+        final TokenId tokenId = tokenClient.createToken(accounts.get("first"),
+                TestDataUtils.createTokenModel(name, symbol, 1000L, null, TokenSupplyType.INFINITE));
         this.tokenInfo = tokenClient.retrieveToken(accounts.get("first"), tokenId);
     }
 
@@ -111,30 +111,15 @@ public class TokensStepDefinitions extends AbstractBaseStepDefinitions {
         assertEquals(1000 + mintingAmount, tokenInfo.totalSupply);
     }
 
-
-    private CreateTokenModel createTokenModel(String name, String symbol) {
-        return CreateTokenModel.builder()
-                .tokenName(name)
-                .tokenSymbol(symbol)
-                .decimals(2)
-                .initialSupply(1000L)
-                .supplyType(TokenSupplyType.INFINITE)
-                .build();
-    }
-
     @When("I create a fixed supply token named {string} \\({string}) with {int} tokens")
     public void fixedSupplyToken(
             final String name,
             final String symbol,
             final int initialSupply) {
-        final CreateTokenModel token = CreateTokenModel.builder()
-                .tokenName(name)
-                .tokenSymbol(symbol)
-                .decimals(2)
-                .initialSupply((long) initialSupply)
-                .maxSupply((long) initialSupply)
-                .supplyType(TokenSupplyType.FINITE)
-                .build();
+        final CreateTokenModel token
+                = TestDataUtils.createTokenModel(name, symbol,
+                (long) initialSupply, (long) initialSupply, TokenSupplyType.FINITE);
+
 
         final TokenId tokenId = tokenClient.createToken(accounts.get("first"), token);
         this.tokenInfo = tokenClient.retrieveToken(accounts.get("first"), tokenId);
@@ -197,7 +182,7 @@ public class TokensStepDefinitions extends AbstractBaseStepDefinitions {
     }
 
     @And("The first account submits the transaction")
-    public void theFirstAccountSubmitsTheTransaction() throws PrecheckStatusException, TimeoutException, ReceiptStatusException {
+    public void theFirstAccountSubmitsTheTransaction() throws Exception {
         final HederaAccount firstAccount = accounts.get("first");
 
         transferTransaction
@@ -235,7 +220,8 @@ public class TokensStepDefinitions extends AbstractBaseStepDefinitions {
         return account;
     }
 
-    @When("A transaction is created to transfer {int} HTT tokens out of the first and second account and {int} HTT tokens into the third account and {int} HTT tokens into the fourth account")
+    @When("A transaction is created to transfer {int} HTT tokens out of the first and second account and {int} HTT tokens "
+            + "into the third account and {int} HTT tokens into the fourth account")
     public void multipleAccountsTransaction(int fromFirstAndSecond, int toThird, int toForth) {
         final HederaAccount firstAccount = accounts.get("first");
         final HederaAccount secondAccount = accounts.get("second");

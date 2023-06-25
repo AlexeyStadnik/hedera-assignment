@@ -70,6 +70,8 @@ public class ConsensusStepDefinitionsImpl extends AbstractBaseStepDefinitions {
         int retries = 0;
 
         while (!messageReceived && retries < 10) {
+            // Hedera testnet is unstable so need to retry
+            topicClient.publishMessage(accounts.get("first"), topicId, "message");
             messageReceived = countDownLatch.await(10, TimeUnit.SECONDS);
             retries++;
         }

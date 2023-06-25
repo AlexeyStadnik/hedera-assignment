@@ -1,8 +1,9 @@
 buildscript {
     ext {
         hashgraphVersion = '2.25.0'
-        grpcVersion = '1.46.0'
+        grpcVersion = '1.56.0'
         slf4jVersion = '2.0.3'
+        logbackVersion = '1.4.8'
         mapstructVersion = '1.5.4.Final'
         gsonVersion = '2.8.9'
         lombokVersion = '1.18.28'
@@ -23,6 +24,7 @@ repositories {
     mavenCentral()
 }
 
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -34,8 +36,11 @@ dependencies {
     //    Hedera
     implementation "com.hedera.hashgraph:sdk:${hashgraphVersion}"
     implementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
-    implementation "org.slf4j:slf4j-nop:${slf4jVersion}"
     implementation "com.google.code.gson:gson:${gsonVersion}"
+
+    // loggin
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
 
     // mapstruct
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -58,6 +63,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-
-    systemProperty 'cucumber.plugin', 'pretty'
 }

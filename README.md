@@ -1,4 +1,6 @@
-# Set of cucumber scenarios for various Hashgraph APIs
+# Set of cucumber scenarios for various Hashgraph APIs 
+
+![Hedera Cucumber scenarios](https://github.com/alexeystadnik/hedera-assignment/actions/workflows/main.yml/badge.svg)
 
 ## Prerequisites
 

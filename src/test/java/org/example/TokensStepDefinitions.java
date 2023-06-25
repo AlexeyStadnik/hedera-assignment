@@ -169,13 +169,17 @@ public class TokensStepDefinitions extends AbstractBaseStepDefinitions {
     @Given("Given the first account holds {int} HTT tokens")
     public void givenTheFirstAccountHoldsHTTTokens(int amount) {
         tokenClient.associateAccount(rootAccount, accounts.get("first"), tokenInfo.tokenId);
-        tokenClient.transferTokens(rootAccount, accounts.get("first").accountId(), tokenInfo.tokenId, amount);
+        if (amount > 0) {
+            tokenClient.transferTokens(rootAccount, accounts.get("first").accountId(), tokenInfo.tokenId, amount);
+        }
     }
 
     @Given("Given the second account holds {int} HTT tokens")
     public void givenTheSecondAccountHoldsHTTTokens(int amount) {
         tokenClient.associateAccount(rootAccount, accounts.get("second"), tokenInfo.tokenId);
-        tokenClient.transferTokens(rootAccount, accounts.get("second").accountId(), tokenInfo.tokenId, amount);
+        if (amount > 0) {
+            tokenClient.transferTokens(rootAccount, accounts.get("second").accountId(), tokenInfo.tokenId, amount);
+        }
     }
 
     @When("The first account creates a transaction to transfer {int} HTT tokens to the second account")

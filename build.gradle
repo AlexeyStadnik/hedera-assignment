@@ -1,0 +1,63 @@
+buildscript {
+    ext {
+        hashgraphVersion = '2.25.0'
+        grpcVersion = '1.46.0'
+        slf4jVersion = '2.0.3'
+        mapstructVersion = '1.5.4.Final'
+        gsonVersion = '2.8.9'
+        lombokVersion = '1.18.28'
+        cucumberVersion = '7.12.1'
+        junitVersion = '5.8.1'
+    }
+}
+
+plugins {
+    id 'java'
+    id "se.thinkcode.cucumber-runner" version "0.0.8"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+
+dependencies {
+    //    Hedera
+    implementation "com.hedera.hashgraph:sdk:${hashgraphVersion}"
+    implementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    implementation "org.slf4j:slf4j-nop:${slf4jVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+
+    // mapstruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    //    Testing
+    testImplementation "io.cucumber:cucumber-core:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+test {
+    useJUnitPlatform()
+
+    systemProperty 'cucumber.plugin', 'pretty'
+}
